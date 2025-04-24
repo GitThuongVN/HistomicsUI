@@ -1,0 +1,51 @@
+.modal-dialog(role='document')
+  .modal-content
+    form.modal-form(role='form')
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        h4.modal-title Biểu đồ siêu dữ liệu
+      .modal-body
+        .form-group
+          label(for='h-plot-format') Định dạng
+          -
+            var plotFormats = [
+              {key: 'scatter', label: 'Phân tán'},
+              {key: 'violin', label: 'Vĩ cầm'},
+              {key: 'distrib', label: 'Phân phối'}]
+          select#h-plot-format.form-control
+            each opt in plotFormats
+              option(value=opt.key, selected=plotConfig.format === opt.key) #{opt.label}
+        -
+          var seriesList = [
+            {key: 'x', label: 'Trục x', number: true, comment: 'Không sử dụng trong biểu đồ vĩ cầm'},
+            {key: 'y', label: 'Trục y', number: true, noNone: true},
+            {key: 'r', label: 'Bán kính'},
+            {key: 'c', label: 'Màu sắc'},
+            {key: 's', label: 'Ký hiệu', string: true, comment: 'Nhóm cho biểu đồ vĩ cầm và phân phối'},
+            {key: 'u', label: 'Giảm chiều', number: true, multiple: true}]
+        -
+          var numNumbers = 0;
+          var numIndex = [];
+          plotOptions.forEach((po, idx) => { numIndex.push(numNumbers);  if (po.type === 'number') { numNumbers += 1; }});
+        for series, seriesidx in seriesList
+          .form-group(class=series.multiple ? 'h-plot-resizable' : '')
+            label(for='h-plot-series-' + series.key) #{series.label}
+            if series.comment
+              p.g-hui-description #{series.comment}
+            select.h-plot-select.form-control(id='h-plot-series-' + series.key, multiple=series.multiple)
+              if !series.noNone
+                option(value='_none_', selected=plotConfig[series.key] === undefined) Không
+              each opt, optidx in plotOptions
+                if (!series.number || opt.type === 'number') && (!series.string || opt.type === 'string' || opt.distinct)
+                  - var selected = plotConfig[series.key] === opt.key
+                  - if (plotConfig[series.key] === undefined && series.number === true && numIndex[optidx] === seriesidx && (!plotConfig.format || plotConfig.format === 'scatter')) { selected = true; }
+                  - if (series.multiple) { selected = plotConfig[series.key] ? plotConfig[series.key].includes(opt.key) : false; }
+                  option(value=opt.key, selected=selected) #{opt.title}#{opt.count > 1 && opt.distinctcount !== 1 ? ' *' : ''}
+        .form-group
+          label(for='h-plot-folder')
+            input#h-plot-folder(type='checkbox', checked=plotConfig.folder)
+            |  Bao gồm dữ liệu từ các mục khác trong cùng thư mục
+      .modal-footer
+        button.btn.btn-default.h-cancel(type='button', data-dismiss='modal') Hủy bỏ
+        button.btn.btn-primary.h-submit(type='submit') Lưu

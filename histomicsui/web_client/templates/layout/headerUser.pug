@@ -1,0 +1,24 @@
+if user
+  - var login = user.get('login');
+  a.h-user-dropdown-link(data-toggle='dropdown')
+    | #[span.icon-user-1] #{login} #[span.icon-down-dir]
+  ul.dropdown-menu(role='menu')
+    li
+      a.g-my-folders(href=`../girder#jobs/user/${user.id}`, target='girder')
+        i.icon-th-list
+        | Công việc của tôi
+    li
+      a.g-my-settings(href=`../girder#useraccount/${user.id}/info`, target='girder')
+        i.icon-cog-alt
+        | Tài khoản của tôi
+    li.divider
+    li
+      a.g-logout
+        i.icon-logout-1
+        | Đăng xuất
+else
+  p.navbar-text
+    a.navbar-link.g-register Đăng ký
+    | #{' hoặc '}
+    a.navbar-link.g-login Đăng nhập
+      i.icon-login-1
