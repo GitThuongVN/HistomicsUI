@@ -1,0 +1,110 @@
+extends ./panel.pug
+
+block title
+  | #[span.icon-pencil-1] #{title} #[span.h-panel-name(title=name) #{name}]
+
+block content
+  .input-group.input-group-sm.h-style-group-row
+    select.form-control.h-style-group
+      each group in groups.sortBy('id')
+        option(value=group.id, selected=group.id === style)
+          = group.id
+    .input-group-btn
+      button.btn.btn-default.h-configure-style-group(type='button')
+        span.icon-cog-1(title='Cấu hình nhóm kiểu. Phím tắt: "q" và "w" để chọn nhóm kiểu tiếp theo và trước đó, tương ứng')
+  .btn-group.btn-justified.btn-group-sm.h-draw-tools
+    .btn-group.btn-group-sm
+      button.h-draw.btn.btn-default(
+        type='button', data-type='point', title='Vẽ một điểm mới (phím tắt: o)', class=drawingType === 'point' ? 'active' : null)
+        | #[span.icon-circle-1]Điểm
+    .btn-group.btn-group-sm
+      button.h-draw.btn.btn-default(
+        type='button', data-type='rectangle', title='Vẽ một hình chữ nhật mới (phím tắt: r)', class=drawingType === 'rectangle' ? 'active' : null)
+        | #[span.icon-check-empty-1]Hình chữ nhật
+      button.btn.btn-default.h-dropdown-title.h-brush-dropdown(type='button', data-target='#h-fixed-shape-controls')
+        i.icon-down-dir-1
+      .h-fixed-shape-controls.h-dropdown-content.collapse
+        .form-group.h-fixed-shape-form-group.input-sm
+          label.radio
+            input.h-fixed-shape(type="radio", name="h-fixed-shape", mode="unconstrained")
+            | Không ràng buộc
+          label.radio
+            input.h-fixed-shape(type="radio", name="h-fixed-shape", mode="fixed_aspect_ratio")
+            | Tỷ lệ cố định
+          label.radio
+            input.h-fixed-shape(type="radio", name="h-fixed-shape", mode="fixed_size")
+            | Kích thước cố định
+        .form-group.h-fixed-shape-form-group.h-fixed-values.input-sm
+          label
+            | Chiều rộng
+            input.h-fixed-width(type="number", min="1", value=opts.fixed_width)
+          label
+            | Chiều cao
+            input.h-fixed-height(type="number", min="1", value=opts.fixed_height)
+    .btn-group.btn-group-sm
+      button.h-draw.btn.btn-default(
+        type='button', data-type='ellipse', title='Vẽ một hình elip mới (phím tắt: i)', class=drawingType === 'ellipse' ? 'active' : null)
+        | #[span.icon-circle-empty-1.flattenicon]Hình elip
+      button.btn.btn-default.h-dropdown-title.h-brush-dropdown(type='button', data-target='#h-fixed-shape-controls')
+        i.icon-down-dir-1
+      .h-fixed-shape-controls.h-dropdown-content.collapse
+        .form-group.h-fixed-shape-form-group.input-sm
+          label.radio
+            input.h-fixed-shape(type="radio", name="h-fixed-shape", mode="unconstrained")
+            | Không ràng buộc
+          label.radio
+            input.h-fixed-shape(type="radio", name="h-fixed-shape", mode="fixed_aspect_ratio")
+            | Tỷ lệ cố định
+          label.radio
+            input.h-fixed-shape(type="radio", name="h-fixed-shape", mode="fixed_size")
+            | Kích thước cố định
+        .form-group.h-fixed-shape-form-group.h-fixed-values.input-sm
+          label
+            | Chiều rộng
+            input.h-fixed-width(type="number", min="1", value=opts.fixed_width)
+          label
+            | Chiều cao
+            input.h-fixed-height(type="number", min="1", value=opts.fixed_height)
+    .btn-group.btn-group-sm
+      button.h-draw.btn.btn-default(
+        type='button', data-type='circle', title='Vẽ một hình tròn mới (phím tắt: c)', class=drawingType === 'circle' ? 'active' : null)
+        | #[span.icon-circle-empty-1]Hình tròn
+    .btn-group.btn-group-sm
+      button.h-draw.btn.btn-default(
+        type='button', data-type='polygon', title='Vẽ một đa giác mới (phím tắt: p)', class=drawingType === 'polygon' ? 'active' : null)
+        | #[span.icon-draw-polygon-1]Đa giác
+    .btn-group.btn-group-sm
+      button.h-draw.btn.btn-default(
+        type='button', data-type='line', title='Vẽ một đường thẳng mới (phím tắt: l)', class=drawingType === 'line' ? 'active' : null)
+        | #[span.icon-pencil-1]Đường thẳng
+    .btn-group.btn-group-sm
+      button.h-draw.btn.btn-default(
+        type='button', data-type='brush', title='Vẽ bằng cọ (phím tắt: b)', class=drawingType === 'brush' ? 'active' : null, shape=opts.brush_shape)
+        span.shape.square
+          | #[span.icon-check-empty-1]
+        span.shape.circle
+          | #[span.icon-circle-empty-1]
+        | Cọ
+      button.btn.btn-default.h-dropdown-title.h-brush-dropdown(type='button', data-target='#h-brush-controls')
+        i.icon-down-dir-1
+      .h-brush-controls.h-dropdown-content.collapse
+        .form-group.input-sm
+          label.radio-inline
+            input.h-brush-shape.h-brush-square(type="radio", name="h-brush-shape", checked=opts.brush_shape !== 'circle' ? 'checked' : undefined, shape="square", next_shape="circle")
+            | Hình vuông
+          label.radio-inline
+            input.h-brush-shape.h-brush-circle(type="radio", name="h-brush-shape", checked=opts.brush_shape === 'circle' ? 'checked' : undefined, shape="circle", next_shape="square")
+            | Hình tròn
+        .form-group.input-sm
+          label
+            | Kích thước
+            input.h-brush-size(type="number", min="1", value=opts.brush_size)
+        .form-group.input-sm
+          label(title="Nếu được chọn, kích thước tính bằng pixel màn hình. Nếu không được chọn, kích thước tính bằng pixel ảnh gốc")
+            input.h-brush-screen(type="checkbox", checked=opts.brush_screen ? 'checked' : undefined)
+            | Màn hình
+  .h-group-count
+    b.h-group-count-label Số lượng:
+    span.h-group-count-options
+  .h-elements-container
+    include drawWidgetElement.pug

@@ -1,0 +1,80 @@
+extends ./panel.pug
+
+block title
+  | #[span.icon-tags-1] #[span.icon-spin5.animate-spin.save-mark(title="Đang lưu Chú thích")] #{title}
+
+block content
+  .btn-group.h-hide-show-buttons(role='group')
+    .btn-group.btn-group-sm(role='group')
+      button.btn.btn-default.h-show-all-annotations(type='button', title='Hiển thị tất cả chú thích. Phím tắt: a')
+        | #[span.icon-eye-1]
+    .btn-group.btn-group-sm(role='group')
+      button.btn.btn-default.h-hide-all-annotations(type='button', title='Ẩn tất cả chú thích. Phím tắt: a')
+        | #[span.icon-eye-off-1]
+    span.h-annotation-opacity-container(title=`Độ mờ tổng thể của Chú thích ${(opacity * 100).toFixed()}%`)
+      input#h-annotation-opacity(
+          type="range", min="0", max="1", step="0.01", value=opacity)
+    span.h-annotation-fill-opacity-container(title=`Độ mờ tô của Chú thích ${(fillOpacity * 100).toFixed()}%`)
+      input#h-annotation-fill-opacity(
+          type="range", min="0", max="1", step="0.01", value=fillOpacity)
+    .btn-group.btn-group-sm(role='group')
+      button.btn.btn-default.h-annotation-select-by-region(type='button', title='Chọn chú thích theo vùng. Phím tắt: s; S chọn bằng đa giác; C xóa lựa chọn')
+        | #[span.icon-vector-polygon]
+
+  - var groups = _.keys(annotationGroups);
+  - groups.sort();
+  each groupName in groups
+    - var annotations = annotationGroups[groupName];
+    - var expanded = expandedGroups.has(groupName);
+    - var expandedClass = expanded ? 'h-group-expanded' : 'h-group-collapsed'
+    .h-annotation-group(class=[expandedClass], data-group-name=groupName)
+      .h-annotation-group-name.clearfix
+        if expanded
+          i.icon-folder-open-1
+        else
+          i.icon-folder-1
+        = groupName
+      if expanded
+        each annotation in annotations
+          - var name = annotation.get('annotation').name;
+          - var displayed = annotation.get('displayed');
+          - var partial = annotation._centroids && annotation._centroids.partial
+          - var loading = annotation.get('loading');
+          - var classes = [];
+          if annotation.id === activeAnnotation          
+            - classes.push('h-active-annotation')
+          if annotation.get('highlight')
+            - classes.push('h-highlight-annotation')
+          .h-annotation(data-id=annotation.id, class=classes)
+            if loading
+              span.icon-spin6.animate-spin.h-float-left
+            else if displayed
+              span.icon-eye-1.h-toggle-annotation.h-float-left(
+                title='Ẩn chú thích' + (partial ? '.  Chú thích chỉ được tải một phần' : ''), class=partial ? 'partial' : '')
+            else
+              span.icon-eye-off-1.h-toggle-annotation.h-float-left(
+                title='Hiện chú thích')
+            span.h-annotation-name(title=name) #{name}
+
+            span.h-annotation-right
+              if writeAccess(annotation, true)
+                span.icon-trash.h-delete-annotation(
+                    title='Xóa chú thích')
+              if writeAccess(annotation)
+                span.icon-cog-alt-1.h-edit-annotation-metadata(
+                    title='Chỉnh sửa chú thích')
+              a(href=annotation.downloadUrl().replace(/\/download$/, ''),                
+                  download=name + '.json')
+                span.icon-download-1.h-download-annotation(
+                    title='Tải xuống chú thích')
+
+  .checkbox.h-annotation-toggle
+    label(title='Hiển thị nhãn chú thích khi di chuột qua.')
+      input#h-toggle-labels(type='checkbox', checked=showLabels)
+      | Nhãn
+    label(title='Làm nổi bật chú thích khi di chuột qua.')
+      input#h-toggle-interactive(type='checkbox', checked=interactiveMode)
+      | Tương tác
+    button.btn.btn-sm.btn-primary.h-create-annotation(title='Tạo chú thích mới. Phím tắt: phím cách', class=annotationAccess ? '' : 'hidden')
+      | #[span.icon-plus-squared-1] Mới
+    .clearfix

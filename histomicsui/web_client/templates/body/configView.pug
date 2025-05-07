@@ -1,0 +1,106 @@
+.g-config-breadcrumb-container
+p.g-hui-description
+  | Cung cấp bộ công cụ để phân tích hình ảnh mô học.
+form#g-hui-form(role="form")
+  .form-group
+    label(for="g-hui-webroot-path") Đường dẫn gốc
+    input#g-hui-webroot-path.form-control.input-sm(
+        type="text", value=settings['histomicsui.webroot_path'] || '',
+        placeholder=`Mặc định: ${defaults['histomicsui.webroot_path'] || 'histomics'}`,
+        title="URL tương đối của ứng dụng.")
+  .form-group
+    label(for="g-hui-brand-name") Tên thương hiệu
+    input#g-hui-brand-name.form-control.input-sm(
+        type="text", value=settings['histomicsui.brand_name'] || '',
+        placeholder=`Mặc định: ${defaults['histomicsui.brand_name'] || 'none'}`,
+        title="Tên thương hiệu của ứng dụng.")
+  .form-group
+    label(for="g-hui-brand-color") Màu thương hiệu
+    #g-hui-brand-color-container
+      input#g-hui-brand-color.form-control.input-sm(
+          type="color", value=settings['histomicsui.brand_color'] || defaults['histomicsui.brand_color'],
+          title="Màu của văn bản thương hiệu ứng dụng.")
+      button#g-hui-brand-default-color.form-control.input-sm(
+          type="button", title="Màu mặc định") Mặc định
+  .form-group
+    label(for="g-hui-banner-color") Màu biểu ngữ
+    #g-hui-banner-color-container
+      input#g-hui-banner-color.form-control.input-sm(
+          type="color", value=settings['histomicsui.banner_color'] || defaults['histomicsui.banner_color'],
+          title="Màu biểu ngữ của ứng dụng.")
+      button#g-hui-banner-default-color.form-control.input-sm(
+          type="button", title="Màu mặc định") Mặc định
+  .form-group
+    label(for="g-hui-help-url") URL trợ giúp
+    #g-hui-help-url-container
+      input#g-hui-help-url.form-control.input-sm(
+          type="text", value=settings['histomicsui.help_url'],
+          placeholder="(Tùy chọn) URL để hướng người dùng đến để được trợ giúp",
+          title="Liên kết mà nút trợ giúp tùy chọn trong ứng dụng sẽ dẫn đến. Nếu không có URL nào được chỉ định, nút trợ giúp sẽ không được hiển thị.")
+      button#g-hui-help-default-url.form-control.input-sm(
+          type="button", title="URL mặc định") Mặc định
+  .form-group
+    label(for="g-hui-help-text") Văn bản trợ giúp
+    #g-hui-help-text-container
+      input#g-hui-help-text.form-control.input-sm(
+          type="text", value=settings['histomicsui.help_text'],
+          placeholder="Văn bản hiển thị với nút trợ giúp",
+          title="Văn bản cho nút trợ giúp tùy chọn trong ứng dụng.")
+      button#g-hui-help-default-text.form-control.input-sm(
+          type="button", title="Văn bản mặc định") Mặc định
+  .form-group
+    label(for="g-hui-help-tooltip") Chú giải công cụ trợ giúp
+    #g-hui-help-tooltip-container
+      input#g-hui-help-tooltip.form-control.input-sm(
+          type="text", value=settings['histomicsui.help_tooltip'],
+          placeholder="Văn bản cho chú giải công cụ của nút trợ giúp",
+          title="Văn bản chú giải công cụ cho nút trợ giúp tùy chọn trong ứng dụng.")
+      button#g-hui-help-default-tooltip.form-control.input-sm(
+          type="button", title="Chú giải công cụ mặc định") Mặc định
+  .form-group
+    label(for="g-hui-login-text") Văn bản đăng nhập
+    #g-hui-login-text-container
+      input#g-hui-login-text.form-control.input-sm(
+          type="text", value=settings['histomicsui.login_text'],
+          placeholder="Đăng nhập hoặc email",
+          title="Văn bản cho lời nhắc đăng nhập trong hộp thoại đăng nhập.")
+  .form-group
+    label
+      | Kiểu mặc định để vẽ chú thích
+    input#g-hui-default-draw-styles.input-sm.form-control(
+        type="text", value=settings['histomicsui.default_draw_styles'],
+        placeholder='Một đối tượng JSON liệt kê các kiểu vẽ chú thích mặc định.',
+        title='Danh sách các từ điển kiểu vẽ')
+  .form-group
+    label
+      | Bố cục bảng điều khiển
+    input#g-hui-panel-layout.input-sm.form-control(
+        type="text", value=settings['histomicsui.panel_layout'],
+        placeholder='Danh sách JSON các đối tượng cho mỗi bảng điều khiển',
+        title='Danh sách JSON các đối tượng cho mỗi bảng điều khiển. Mỗi bảng điều khiển có tên (tên ngắn nội bộ, chẳng hạn như zoom, draw hoặc analysis), vị trí (một trong các giá trị mặc định, bên trái, bên phải, ẩn), trạng thái (một trong các giá trị mặc định, mở, đóng)')
+  .form-group
+    label(for="g-hui-quarantine-folder") Thư mục cách ly
+    p.g-hui-description
+      | Nếu chỉ định một thư mục cách ly, người dùng có quyền ghi sẽ thấy nút Cách ly bên cạnh các mục. Khi nhấp vào, điều này sẽ di chuyển mục đó đến thư mục cách ly và thêm siêu dữ liệu để ghi lại vị trí ban đầu của nó. Thư mục cách ly nên có khả năng hiển thị bị hạn chế.
+    .input-group.input-group-sm
+      input#g-hui-quarantine-folder.form-control.input-sm(
+          type="text", value=settings['histomicsui.quarantine_folder'] || '',
+          title="Thư mục để lưu trữ các mục bị cách ly.")
+      .input-group-btn
+        button.g-open-browser.btn.btn-default(type="button")
+          i.icon-folder-open
+  .form-group
+    label Giữ các tệp chú thích sau khi tải lên
+    p.g-hui-image-description
+      | Sau khi tệp chú thích (.anot) được tải lên và tải vào, nó có thể được giữ lại dưới dạng một mục mới hoặc bị xóa.
+    .g-hui-delete-annotations-after-ingest-container
+      label.radio-inline
+        input.g-hui-keep-annotations-after-ingest(type="radio", name="g-hui-delete-annotations-after-ingest", checked=settings['histomicsui.delete_annotations_after_ingest'] !== true ? 'checked': undefined)
+        | Giữ lại các mục chú thích sau khi tải lên
+      label.radio-inline
+        input.g-hui-delete-annotations-after-ingest(type="radio", name="g-hui-delete-annotations-after-ingest", checked=settings['histomicsui.delete_annotations_after_ingest'] !== true ? undefined : 'checked')
+        | Xóa các mục chú thích sau khi tải lên
+  p#g-hui-error-message.g-validation-failed-message
+.g-hui-buttons
+  button#g-hui-save.btn.btn-sm.btn-primary Lưu
+  button#g-hui-cancel.btn.btn-sm.btn-default Hủy bỏ
